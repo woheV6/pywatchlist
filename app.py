@@ -52,9 +52,8 @@ def forge():
 @app.route('/index') # 装饰器
 @app.route('/home') # 装饰器
 def main():
-    user = User.query.first()
     movies= Movie.query.all()
-    return render_template('index.html',user=user,movies=movies)
+    return render_template('index.html',movies=movies)
 @app.route('/test')
 def test():
     return  '<h1>哈哈</h1><img src="http://helloflask.com/totoro.gif">'
@@ -69,6 +68,18 @@ def hello():
 @app.route('/img') # 装饰器
 def img():
     return ''
+
+# 自定义错误页面
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'),404
+
+# 模版上下文处理函数
+@app.context_processor
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
+
 
 class User(db.Model):
     id = db.Column(db.Integer,primary_key=True) # 主键
