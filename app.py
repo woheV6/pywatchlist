@@ -29,4 +29,7 @@ def hello():
     print(url_for('test'))
     print(url_for('userName',name='xixi'))
     return 'Welcome to my watchlist!!'
+@app.route('/img') # 装饰器
+def img():
+    return ''
 
