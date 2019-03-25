@@ -1,4 +1,4 @@
-from flask import Flask,url_for,render_template
+from flask import Flask,url_for,render_template,redirect,flash,request
 from flask_sqlalchemy import SQLAlchemy
 import os
 import sys
@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # 关闭对模型修改的�
 db = SQLAlchemy(app) # 初始化扩展，传入程序实例
 
 
+app.config['SECRET_KEY'] = '123456'
 
 @app.cli.command() # 注册为命令
 @click.option('--drop',is_flag=True,help='Create after drop.')
@@ -48,12 +49,6 @@ def forge():
         db.session.add(movie)
     db.session.commit()
     click.echo('Done!')
-@app.route('/') # 装饰器
-@app.route('/index') # 装饰器
-@app.route('/home') # 装饰器
-def main():
-    movies= Movie.query.all()
-    return render_template('index.html',movies=movies)
 @app.route('/test')
 def test():
     return  '<h1>哈哈</h1><img src="http://helloflask.com/totoro.gif">'
@@ -89,3 +84,54 @@ class Movie(db.Model):
     title = db.Column(db.String(60)) # 标题
     year = db.Column(db.String(4)) # 年份
 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':  # 判断是否是 POST 请求
+        # 获取表单数据
+        title = request.form.get('title')  # 传入表单对应输入字段的 name 值
+        year = request.form.get('year')
+        print(title)
+        print(year)
+        # 验证数据
+        if not title or not year or len(year) > 4 or len(title) > 60:
+            flash('Invalid input.')  # 显示错误提示
+            return redirect(url_for('index'))  # 重定向回主页
+        # # 保存表单数据到数据库
+        movie = Movie(title=title, year=year)  # 创建记录
+        db.session.add(movie)  # 添加到数据库会话
+        db.session.commit()  # 提交数据库会话
+        flash('Item created.')  # 显示成功创建的提示
+        return redirect(url_for('index'))  # 重定向回主页
+    user = User.query.first()
+    movies = Movie.query.all()
+    return render_template('index.html', user=user, movies=movies)
+
+@app.route('/login')
+def login():
+     return render_template('login.html')
+# 修改记录
+@app.route('/edit/<int:movie_id>', methods=['GET', 'POST'])
+def edit(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+    if request.method == 'POST':  # 处理编辑表单的提交请求
+        title = request.form['title']
+        year = request.form['year']
+        
+        if not title or not year or len(year) > 4 or len(title) > 60:
+            flash('Invalid input.')
+            return redirect(url_for('edit', movie_id=movie_id))  # 重定向回对应的编辑页面
+        
+        movie.title = title  # 更新标题
+        movie.year = year  # 更新年份
+        db.session.commit()  # 提交数据库会话
+        flash('Item updated.')
+        return redirect(url_for('index'))  # 重定向回主页
+    return render_template('edit.html', movie=movie)  # 传入被编辑的电影记录
+# 删除记录
+@app.route('/delete/<int:movie_id>', methods=['POST'])
+def delete(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+    db.session.delete(movie)
+    db.session.commit()
+    flash('Item is detele!')
+    return redirect(url_for('index'))

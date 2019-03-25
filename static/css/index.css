@@ -46,3 +46,13 @@ footer{
     border-radius: 5px;
     padding: 3px 5px;
 }
+.alert {
+    position: relative;
+    padding: 7px;
+    margin: 7px 0;
+    border: 1px solid transparent;
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    border-radius: 5px;
+}
