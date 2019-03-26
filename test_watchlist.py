@@ -1,6 +1,7 @@
 import unittest
-from flask import current_app
-from app import app, db, Movie, User, forge, initdb
+from watchapp import  app,db
+from  watchapp.models import Movie,User
+from watchapp.commands import forge,initdb
 class WatchlistTestCase(unittest.TestCase):
 
     def setUp(self):
