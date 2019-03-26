@@ -1,5 +1,13 @@
 {%extends 'base.html' %}
 {%block content%}
+    <!-- 在模板中可以直接使用 current_user 变量 -->
+    {% if current_user.is_authenticated %}
+    <form method="post">
+        Name <input type="text" name="title" autocomplete="off" required>
+        Year <input type="text" name="year" autocomplete="off" required>
+        <input class="btn" type="submit" name="submit" value="Add">
+    </form>
+    {% endif %}
     {# 使用 length 过滤器获取 movies 变量的长度 #}
     <p>{{ movies|length }} Titles</p>
     <ul class="movie-list">
@@ -8,6 +16,7 @@
                 <span class="float-right">
                     <a class="imdb" href="https://www.imdb.com/find?q={{ movie.title }}" target="_blank" title="Find this movie on IMDb">IMDb</a>
                 </span>
+                {%if current_user.is_authenticated%}
                 <span class="float-right">
                     <a class="imdb" href="{{ url_for('edit', movie_id=movie.id) }}" target="_blank" title="编辑">edit</a>
                 </span>
@@ -16,8 +25,10 @@
                         <input class="btn" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
                     </form>
                 </span>
+                {%endif%}
         </li>  {# 等同于 movie['title'] #}
         {% endfor %}  {# 使用 endfor 标签结束 for 语句 #}
     </ul>
+
     <img class='totoro' alt='totoro' src="{{url_for('static',filename='images/totoro.gif')}}">
 {% endblock%}

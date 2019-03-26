@@ -1,10 +1,13 @@
-{%extends 'base.html' %}
-{%block content%}
-    {# 使用 length 过滤器获取 movies 变量的长度 #}
-    <p>{{ movies|length }} Titles</p>
-    <form method="post" action="/">
-        Name <input type="text" name="title" autocomplete="off" required>
-        Year <input type="text" name="year" autocomplete="off" required>
-        <input class="btn" type="submit" name="submit" value="Add">
-    </form>
-{% endblock%}
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Login</h3>
+<form method="post" action='/login'>
+    Username<br>
+    <input type="text" name="username" required><br><br>
+    Password<br>
+    <!-- 密码输入框的 type 属性使用 password，会将输入值显示为圆点 -->
+    <input type="password" name="password" required><br><br>
+    <input class="btn" type="submit" name="submit" value="Submit">
+</form>
+{% endblock %}
