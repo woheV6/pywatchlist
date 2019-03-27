@@ -1,0 +1,17 @@
+.content_text{
+    height: 50px;
+    width: 70%;
+    background: whitesmoke;
+    border-radius: 10px;
+    box-shadow: 5px 10px 5px #e6e6e6;
+}
+.content_form{
+    padding: 20px;
+}
+.content_item{
+    list-style: none;
+    padding: 10px 5px;
+    border-bottom: 1px solid;
+    font-size: 16px;
+    color: #636357;
+}
