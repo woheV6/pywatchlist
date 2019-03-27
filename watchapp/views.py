@@ -1,7 +1,7 @@
-from flask import Flask,url_for,render_template,redirect,flash,request
+from flask import url_for,render_template,redirect,flash,request
 from watchapp import app, db
-from flask_login import LoginManager,login_user,UserMixin,current_user,login_required,logout_user
-from watchapp.models import User, Movie
+from flask_login import login_user,current_user,login_required,logout_user
+from watchapp.models import User, Movie,MessageBoard
 from werkzeug.security import generate_password_hash,check_password_hash
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -105,3 +105,19 @@ def settings():
         flash('Setting updated')
         return redirect(url_for('index'))
     return render_template('settings.html')
+
+@app.route('/contents', methods=['GET', 'POST'])
+def contents():
+    if request.method == 'POST':
+        content = request.form['content']
+        if not content or len(content) > 200:
+            flash('Invalid Input!')
+            return redirect(url_for('contents'))
+        meb = MessageBoard(content=content)
+        db.session.add(meb)
+        db.session.commit()
+        flash('add contenting')
+        return redirect(url_for('contents'))
+    content_s= MessageBoard.query.all()
+    print(content_s)
+    return render_template('content.html',contents=content_s)
