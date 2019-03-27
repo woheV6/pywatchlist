@@ -1,13 +1,16 @@
 {%extends 'base.html' %}
 {% block content %}
-    <form method="post" action="/contents">
-        内容：<textarea type="text" name="content" required></textarea>
-        <input class="btn" type="submit" name="submit" value="提交">
-    </form>
-    <br/>
-    <ul>
-    {% for content in contents %}
-        <li>{{ content.content }}</li>
-    {% endfor %}
-    </ul>
+    <div class="content">
+            <form method="post" action="/contents" class="content_form">
+                内容：<textarea class='content_text' type="text" name="content" required></textarea>
+                <input class="btn" type="submit" name="submit" value="提交">
+            </form>
+            <br/>
+            <ul>
+            {% for content in contents %}
+                <li class="content_item">{{ content.content }}</li>
+            {% endfor %}
+            </ul>
+    </div>
+
 {% endblock%}
